@@ -3,14 +3,16 @@
   import Todo from "./Todo.svelte";
   import MoreActions from "./MoreActions.svelte";
   import NewTodo from "./NewTodo.svelte";
+  import TodoStatus from "./TodoStatus.svelte";
+
   export let todos = [];
 
-  $: totalTodos = todos.length;
-  $: completedTodos = todos.filter((todo) => todo.completed).length;
+  let todoStatus;
 
   let filter = "all";
 
-  $: newTodoId = totalTodos === 0 ? 1 : Math.max(...todos.map((t) => t.id)) + 1;
+  $: newTodoId =
+    todos.length === 0 ? 1 : Math.max(...todos.map((t) => t.id)) + 1;
 
   const filterTodos = (filter, todos) =>
     filter === "active"
@@ -21,6 +23,7 @@
 
   function removeTodo(todo) {
     todos = todos.filter((t) => t.id !== todo.id);
+    todoStatus.focus();
   }
 
   function addTodo(name) {
@@ -43,14 +46,8 @@
 
 <div class="todoapp stack-large">
   <NewTodo autofocus on:addTodo={(e) => addTodo(e.detail)} />
-
-  <!-- Filter -->
   <FilterButton bind:filter />
-
-  <!-- TodosStatus -->
-  <h2 id="list-heading">
-    {completedTodos} out of {totalTodos} items completed
-  </h2>
+  <TodoStatus bind:this={todoStatus} {todos} />
 
   <!-- Todos -->
   <ul role="list" class="todo-list stack-large">
