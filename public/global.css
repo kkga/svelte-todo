@@ -28,6 +28,7 @@ button {
   background: transparent;
   color: inherit;
   font: inherit;
+
   line-height: normal;
   -webkit-font-smoothing: inherit;
   -moz-osx-font-smoothing: inherit;
