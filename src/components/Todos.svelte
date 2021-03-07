@@ -46,10 +46,11 @@
 
 <div class="todoapp stack-large">
   <NewTodo autofocus on:addTodo={(e) => addTodo(e.detail)} />
+
   <FilterButton bind:filter />
+
   <TodoStatus bind:this={todoStatus} {todos} />
 
-  <!-- Todos -->
   <ul role="list" class="todo-list stack-large">
     {#each filterTodos(filter, todos) as todo (todo.id)}
       <li class="todo">
