@@ -1,38 +1,41 @@
 <script>
-import { createEventDispatcher } from "svelte";
-const dispatch = createEventDispatcher();
+  import { createEventDispatcher, tick } from "svelte";
+  const dispatch = createEventDispatcher();
 
-export let todo;
+  export let todo;
 
-let editing = false;
-let name = todo.name;
+  let editing = false;
+  let name = todo.name;
+  let nameEl;
 
-function update(updatedTodo) {
-  todo = { ...todo, ...updatedTodo };
-  dispatch("update", todo);
-}
+  function update(updatedTodo) {
+    todo = { ...todo, ...updatedTodo };
+    dispatch("update", todo);
+  }
 
-function onCancel() {
-  name = todo.name; // restores name to its initial value and
-  editing = false; // and exit editing mode
-}
+  function onCancel() {
+    name = todo.name; // restores name to its initial value and
+    editing = false; // and exit editing mode
+  }
 
-function onSave() {
-  update({ name: name }); // updates todo name
-  editing = false; // and exit editing mode
-}
+  function onSave() {
+    update({ name: name }); // updates todo name
+    editing = false; // and exit editing mode
+  }
 
-function onRemove() {
-  dispatch("remove", todo); // emit remove event
-}
+  function onRemove() {
+    dispatch("remove", todo); // emit remove event
+  }
 
-function onEdit() {
-  editing = true; // enter editing mode
-}
+  async function onEdit() {
+    editing = true; // enter editing mode
+    await tick();
+    nameEl.focus();
+  }
 
-function onToggle() {
-  update({ completed: !todo.completed }); // updates todo status
-}
+  function onToggle() {
+    update({ completed: !todo.completed }); // updates todo status
+  }
 </script>
 
 <div class="stack-small">
@@ -47,6 +50,7 @@ function onToggle() {
           >New name for '{todo.name}'</label
         >
         <input
+          bind:this={nameEl}
           bind:value={name}
           type="text"
           id="todo-{todo.id}"

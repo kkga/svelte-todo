@@ -42,7 +42,7 @@
 </script>
 
 <div class="todoapp stack-large">
-  <NewTodo on:addTodo={(e) => addTodo(e.detail)} />
+  <NewTodo autofocus on:addTodo={(e) => addTodo(e.detail)} />
 
   <!-- Filter -->
   <FilterButton bind:filter />
