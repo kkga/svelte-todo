@@ -1,11 +1,9 @@
 <script>
   import Todos from "./components/Todos.svelte";
+  import Alert from "./components/Alert.svelte";
 
-  let todos = [
-    { id: 1, name: "woot", completed: true },
-    { id: 2, name: "woot woot", completed: true },
-    { id: 3, name: "hey", completed: false },
-  ];
+  import { todos } from "./stores.js";
 </script>
 
-<Todos {todos} />
+<Alert />
+<Todos bind:todos={$todos} />
