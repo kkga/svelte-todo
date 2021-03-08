@@ -1,19 +1,20 @@
-<script>
+<script lang="ts">
   import { createEventDispatcher } from "svelte";
-  import { selectOnFocus } from "../actions.js";
+  import { selectOnFocus } from "../actions";
+  import type { TodoType } from "../types/todo.type";
 
   const dispatch = createEventDispatcher();
 
-  const focusOnInit = (node) =>
+  const focusOnInit = (node: HTMLElement) =>
     node && typeof node.focus === "function" && node.focus();
 
-  export let todo;
+  export let todo: TodoType;
 
   let editing = false;
   let name = todo.name;
-  let nameEl;
+  let nameEl: HTMLElement;
 
-  function update(updatedTodo) {
+  function update(updatedTodo: Partial<TodoType>) {
     todo = { ...todo, ...updatedTodo };
     dispatch("update", todo);
   }

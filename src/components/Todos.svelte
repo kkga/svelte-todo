@@ -1,56 +1,58 @@
-<script>
+<script lang="ts">
   import FilterButton from "./FilterButton.svelte";
   import Todo from "./Todo.svelte";
   import MoreActions from "./MoreActions.svelte";
   import NewTodo from "./NewTodo.svelte";
   import TodoStatus from "./TodoStatus.svelte";
-  import { alert } from "../stores.js";
+  import { alert } from "../stores";
+  import { Filter } from "../types/filter.enum";
+  import type { TodoType } from "../types/todo.type";
 
-  export let todos = [];
+  export let todos: TodoType[] = [];
 
-  let todoStatus;
+  let todoStatus: TodoStatus;
 
-  let filter = "all";
+  let filter = Filter.ALL;
 
   $: {
-    if (filter === "all") $alert = "Browsing all todos";
-    else if (filter === "active") $alert = "Browsing active todos";
-    else if (filter === "completed") $alert = "Browsing completed todos";
+    if (filter === Filter.ALL) $alert = "Browsing all todos";
+    else if (filter === Filter.ACTIVE) $alert = "Browsing active todos";
+    else if (filter === Filter.COMPLETED) $alert = "Browsing completed todos";
   }
 
   $: newTodoId =
     todos.length === 0 ? 1 : Math.max(...todos.map((t) => t.id)) + 1;
 
-  const filterTodos = (filter, todos) =>
-    filter === "active"
+  const filterTodos = (filter: Filter, todos: TodoType[]) =>
+    filter === Filter.ACTIVE
       ? todos.filter((t) => !t.completed)
-      : filter === "completed"
+      : filter === Filter.COMPLETED
       ? todos.filter((t) => t.completed)
       : todos;
 
-  function removeTodo(todo) {
+  function removeTodo(todo: TodoType) {
     todos = todos.filter((t) => t.id !== todo.id);
     todoStatus.focus();
     $alert = `Todo '${todo.name}' has been deleted`;
   }
 
-  function addTodo(name) {
+  function addTodo(name: string) {
     todos = [...todos, { id: newTodoId, name: name, completed: false }];
     $alert = `Todo '${name}' has been added`;
   }
 
-  function updateTodo(todo) {
+  function updateTodo(todo: TodoType) {
     const i = todos.findIndex((t) => t.id === todo.id);
     if (todos[i].name !== todo.name)
       $alert = `todo '${todos[i].name}' has been renamed to '${todo.name}'`;
     if (todos[i].completed !== todo.completed)
       $alert = `todo '${todos[i].name}' marked as ${
-        todo.completed ? "completed" : "active"
+        todo.completed ? Filter.COMPLETED : Filter.ACTIVE
       }`;
     todos[i] = { ...todos[i], ...todo };
   }
 
-  const checkAllTodos = (completed) => {
+  const checkAllTodos = (completed: boolean) => {
     todos = todos.map((t) => ({ ...t, completed }));
     $alert = `${completed ? "Checked" : "Unchecked"} ${todos.length} todos`;
   };

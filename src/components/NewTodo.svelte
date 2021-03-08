@@ -1,13 +1,13 @@
-<script>
+<script lang="ts">
   import { createEventDispatcher } from "svelte";
   import { onMount } from "svelte";
-  import { selectOnFocus } from '../actions.js'
+  import { selectOnFocus } from '../actions'
   const dispatch = createEventDispatcher();
 
   export let autofocus = false;
 
   let name = "";
-  let nameEl;
+  let nameEl: HTMLElement;
 
   onMount(() => autofocus && nameEl.focus());
 
